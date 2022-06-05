@@ -20,6 +20,7 @@ argo-cd:
   configs:
     secret:
       createSecret: true
+      # admin:admin
       argocdServerAdminPassword: "$2a$10$rJRRzIIckG3fXPh1i2btVuQGVLYpNDdQ5.JxbAK/OR/q65Fl0EfQe"
 
     repositories:
