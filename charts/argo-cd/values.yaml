@@ -1,0 +1,49 @@
+charts_versions: 4.8.2
+
+argo-cd:
+
+  fullnameOverride: argocd
+
+  redis-ha:
+    enabled: false
+  
+  controller:
+    enableStatefulSet: true
+  
+  repoServer:
+    serviceAccount:
+      create: true
+  
+  dex:
+    enabled: false
+  
+  configs:
+    secret:
+      createSecret: true
+      argocdServerAdminPassword: "$2a$10$rJRRzIIckG3fXPh1i2btVuQGVLYpNDdQ5.JxbAK/OR/q65Fl0EfQe"
+
+    repositories:
+      argo-cd-helms:
+        name: argo-cd
+        url: https://argoproj.github.io/argo-helm
+        type: helm
+      gitops-env:
+        url: https://github.com/weallfloatdownhere/argocd-bootstrap-example.git
+
+  server:
+    additionalApplications:
+      - name: root
+        project: default
+        finalizers:
+        - resources-finalizer.argocd.argoproj.io
+        destination:
+          server: https://kubernetes.default.svc
+          namespace: argocd
+        source:
+          path: bootstrap/app
+          repoURL: https://github.com/weallfloatdownhere/argocd-bootstrap-example.git
+          targetRevision: HEAD
+        syncPolicy:
+          automated:
+            prune: true
+            selfHeal: true
